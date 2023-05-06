@@ -159,6 +159,20 @@ class Pago(models.Model):
     deuda_pendiente = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     fecha_vencimiento = models.DateField(default=datetime.datetime.now,null=True, blank=True)
 
+    def clean(self):
+
+
+        if self.pago <= 0:
+            raise ValidationError("El pago no puede ser menor a $ 0 .-")
+
+        Deuda = 0
+        Deuda = self.orden_asociada.debe
+
+        if self.pago > Deuda:
+            raise ValidationError("El pago no puede ser superior al total restante de la orden.")
+
+        return super().clean()
+
     def save(self, *args, **kwargs):
 
         self.total_orden = self.orden_asociada.total
@@ -185,23 +199,25 @@ def Actualizar_Pagos_Ordenes():
     for pago in Orden.objects.all():
 
         monto = 0
+        
+        if pago.estado == "Entregado":
+            pass
+        else:
+            for x in Pago.objects.all():
 
-        for x in Pago.objects.all():
+                if x.orden_asociada.pk == pago.pk:
+                    monto += x.pago
 
-            if x.orden_asociada.pk == pago.pk:
-                monto += x.pago
+            pago.adelanto = monto
 
-        pago.adelanto = monto
+            pago.debe = pago.total - pago.adelanto
 
-        pago.debe = pago.total - pago.adelanto
+            deuda = pago.debe
 
-        deuda = pago.debe
+            if deuda <= 0:
+                pago.estado==3
 
-        if deuda <= 0:
-            pago.estado==3
-
-        pago.save()
-
+            pago.save()
 
 class Gasto(models.Model):
     codigo_gasto = models.AutoField(primary_key=True)
