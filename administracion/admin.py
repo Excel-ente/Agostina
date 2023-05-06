@@ -12,7 +12,7 @@ class ClienteAdmin(admin.ModelAdmin):
     readonly_fields = ('FECHA_PROXIMA_ENTREGA',)
 
 
-                  
+@admin.register(Estado)          
 class EstadoAdmin(admin.ModelAdmin):
     list_display = ('nombre',)
 
