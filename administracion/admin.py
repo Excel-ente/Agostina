@@ -14,7 +14,7 @@ class ClienteAdmin(admin.ModelAdmin):
 
 @admin.register(Estado)          
 class EstadoAdmin(admin.ModelAdmin):
-    list_display = ('nombre',)
+    list_display = ('ESTADO',)
 
 class RecetaOrdenInline(admin.TabularInline):
     model = ArticuloOrden
