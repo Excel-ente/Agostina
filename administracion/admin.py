@@ -13,7 +13,7 @@ class ClienteAdmin(admin.ModelAdmin):
 
 
 @admin.register(Estado)          
-class EstadoAdmin(admin.ModelAdmin):
+class EstadoAdmin(ImportExportModelAdmin):
     list_display = ('ESTADO',)
 
 class RecetaOrdenInline(admin.TabularInline):
